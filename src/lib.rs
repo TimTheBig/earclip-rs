@@ -11,7 +11,6 @@
 //! assert_eq!(indices, vec![1, 2, 0]);
 //! ```
 #![cfg_attr(not(test), no_std)]
-
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
@@ -435,10 +434,9 @@ pub fn deviation(data: &[f64], hole_indices: &[usize], triangles: &[usize], dim:
         let a = triangles[i] * dim;
         let b = triangles[i + 1] * dim;
         let c = triangles[i + 2] * dim;
-        triangles_area += (
-            (data[a] - data[c]) * (data[b + 1] - data[a + 1])
-                - (data[a] - data[b]) * (data[c + 1] - data[a + 1])
-        ).abs();
+        triangles_area += ((data[a] - data[c]) * (data[b + 1] - data[a + 1])
+            - (data[a] - data[b]) * (data[c + 1] - data[a + 1]))
+            .abs();
         i += 3;
     }
 

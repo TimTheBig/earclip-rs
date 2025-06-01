@@ -52,7 +52,16 @@ struct LinkInfo {
 
 impl Node {
     fn new(i: usize, xy: [f64; 2]) -> Self {
-        Self { i, xy, prev_i: 1, next_i: 1, z: 0, prev_z_i: None, next_z_i: None, steiner: false }
+        Self {
+            i,
+            xy,
+            prev_i: 1,
+            next_i: 1,
+            z: 0,
+            prev_z_i: None,
+            next_z_i: None,
+            steiner: false,
+        }
     }
 
     fn link_info(&self) -> LinkInfo {
@@ -346,12 +355,28 @@ fn earcut_linked(
             if pass == Pass::P0 {
                 // try filtering points and slicing again
                 ear_i = filter_points(nodes, ear_i, None);
-                earcut_linked(nodes, ear_i, triangles, dim, (min_x, min_y), inv_size, Pass::P1);
+                earcut_linked(
+                    nodes,
+                    ear_i,
+                    triangles,
+                    dim,
+                    (min_x, min_y),
+                    inv_size,
+                    Pass::P1,
+                );
             } else if pass == Pass::P1 {
                 // if this didn't work, try curing all small self-intersections locally
                 let filtered = filter_points(nodes, ear_i, None);
                 ear_i = cure_local_intersections(nodes, filtered, triangles, dim);
-                earcut_linked(nodes, ear_i, triangles, dim, (min_x, min_y), inv_size, Pass::P2);
+                earcut_linked(
+                    nodes,
+                    ear_i,
+                    triangles,
+                    dim,
+                    (min_x, min_y),
+                    inv_size,
+                    Pass::P2,
+                );
             } else if pass == Pass::P2 {
                 // as a last resort, try splitting the remaining polygon into two
                 split_earcut(nodes, ear_i, triangles, dim, min_x, min_y, inv_size);
@@ -573,8 +598,24 @@ fn split_earcut(
                 ci = filter_points(nodes, ci, end_i);
 
                 // run earcut on each half
-                earcut_linked(nodes, ai, triangles, dim, (min_x, min_y), inv_size, Pass::P0);
-                earcut_linked(nodes, ci, triangles, dim, (min_x, min_y), inv_size, Pass::P0);
+                earcut_linked(
+                    nodes,
+                    ai,
+                    triangles,
+                    dim,
+                    (min_x, min_y),
+                    inv_size,
+                    Pass::P0,
+                );
+                earcut_linked(
+                    nodes,
+                    ci,
+                    triangles,
+                    dim,
+                    (min_x, min_y),
+                    inv_size,
+                    Pass::P0,
+                );
                 return;
             }
             bi = b.next_i;
