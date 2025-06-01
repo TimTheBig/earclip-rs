@@ -16,7 +16,7 @@ A simplified fork of [OpenS2/earclip](https://github.com/OpenS2/earclip).
 ## Install
 
 ```sh
-cargo add earclip-2
+cargo add earclip-rs
 ```
 
 ## The Algorithm
@@ -34,7 +34,7 @@ and [Triangulation by Ear Clipping](http://www.geometrictools.com/Documentation/
 ## Usage
 
 ```rs
-use earclip_2::earclip_float;
+use earclip_rs::earclip_float;
 
 let polygon: &[Vec<&[f64]>] = &[vec![&[0.0, 0.0, 0.0], &[1.0, 0.0, 0.0], &[0.0, 1.0, 0.0]]];
 let (vertices, indices) = earclip_float(polygon, None, None);
@@ -58,17 +58,6 @@ You need the tool `tarpaulin` to generate the coverage report. Install it using 
 cargo install cargo-tarpaulin
 ```
 
-### Running Tests
-
-To run the tests, use the following command:
-
-```sh
-## basic test
-cargo test
-# live testing
-bacon test
-```
-
 ### Generating Coverage Report
 
 To generate the coverage report, use the following command:
@@ -76,12 +65,10 @@ To generate the coverage report, use the following command:
 ```sh
 cargo tarpaulin
 # faster
-cargo tarpaulin --color always --skip-clean
+cargo tarpaulin --skip-clean
 ```
 
-## Benchmarks
-
-### Rust
+### Benchmarks
 
 Run the Rust benchmarks using the following command:
 
