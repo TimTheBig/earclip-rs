@@ -2,10 +2,10 @@
     <div align="center">earclip-rs</div>
 </h1>
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/TimTheBig/earclip-2/rust.yml?logo=github)
-[![Latest version](https://img.shields.io/crates/v/earclip-2.svg)](https://crates.io/crates/earclip)
-[![Documentation](https://docs.rs/earclip-2/badge.svg)](https://docs.rs/earclip-2)
-[![code coverage](https://coveralls.io/repos/github/TimTheBig/earclip-2/badge.svg?branch=main)](https://coveralls.io/github/TimTheBig/earclip-2?branch=main)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/TimTheBig/earclip-rs/rust.yml?logo=github)
+[![Latest version](https://img.shields.io/crates/v/earclip-rs.svg)](https://crates.io/crates/earclip-rs)
+[![Documentation](https://docs.rs/earclip-rs/badge.svg)](https://docs.rs/earclip-rs)
+[![codecov code coverage](https://codecov.io/gh/TimTheBig/earclip-rs/graph/badge.svg?token=A5RU2AEORU)](https://codecov.io/gh/TimTheBig/earclip-rs)
 
 ## About
 
