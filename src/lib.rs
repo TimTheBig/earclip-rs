@@ -408,14 +408,21 @@ pub fn flatten_float(data: &[Vec<&[f64]>]) -> (Vec<f64>, Vec<usize>, usize) {
 /// used to verify correctness of triangulation
 pub fn deviation(data: &[f64], hole_indices: &[usize], triangles: &[usize], dim: usize) -> f64 {
     let has_holes = !hole_indices.is_empty();
-    let outer_len = if has_holes { hole_indices[0] * dim } else { data.len() };
+    let outer_len = if has_holes {
+        hole_indices[0] * dim
+    } else {
+        data.len()
+    };
     let mut polygon_area = fabs(signed_area(data, 0, outer_len, dim));
 
     if has_holes {
         for i in 0..hole_indices.len() {
             let start = hole_indices[i] * dim;
-            let end =
-                if i < hole_indices.len() - 1 { hole_indices[i + 1] * dim } else { data.len() };
+            let end = if i < hole_indices.len() - 1 {
+                hole_indices[i + 1] * dim
+            } else {
+                data.len()
+            };
             polygon_area -= fabs(signed_area(data, start, end, dim));
         }
     }

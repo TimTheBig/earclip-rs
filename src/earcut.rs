@@ -82,7 +82,8 @@ impl<'a> Store<'a> {
         queue: &'a mut Vec<(usize, f64)>,
     ) -> Self {
         let store = Self { data, nodes, queue };
-        store.nodes.push(Node::new(0, [f64::INFINITY, f64::INFINITY])); // dummy node
+        store.nodes
+            .push(Node::new(0, [f64::INFINITY, f64::INFINITY])); // dummy node
 
         store
     }
@@ -90,7 +91,8 @@ impl<'a> Store<'a> {
     fn reset(&mut self, capacity: usize) {
         self.nodes.clear();
         self.nodes.reserve(capacity);
-        self.nodes.push(Node::new(0, [f64::INFINITY, f64::INFINITY])); // dummy node
+        self.nodes
+            .push(Node::new(0, [f64::INFINITY, f64::INFINITY])); // dummy node
     }
 }
 
@@ -120,7 +122,11 @@ pub fn earcut_impl(
     store.reset(store.data.len() / 2 * 3);
 
     let has_holes = !hole_indices.is_empty();
-    let outer_len: usize = if has_holes { hole_indices[0] * dim } else { store.data.len() };
+    let outer_len: usize = if has_holes {
+        hole_indices[0] * dim
+    } else {
+        store.data.len()
+    };
 
     // create nodes
     let Some(mut outer_node_i) = linked_list(store, 0, outer_len, dim, true) else {
@@ -249,8 +255,11 @@ fn eliminate_holes(
     store.queue.clear();
     for (i, hi) in hole_indices.iter().enumerate() {
         let start = *hi * dim;
-        let end =
-            if i < hole_indices.len() - 1 { hole_indices[i + 1] * dim } else { store.data.len() };
+        let end = if i < hole_indices.len() - 1 {
+            hole_indices[i + 1] * dim
+        } else {
+            store.data.len()
+        };
         if let Some(list_i) = linked_list(store, start, end, dim, false) {
             let list = &mut node_mut!(store.nodes, list_i);
             if list_i == list.next_i {
@@ -405,8 +414,14 @@ fn is_ear_hashed<'a>(
     }
 
     // triangle bbox
-    let xy_min = [a.xy[0].min(b.xy[0].min(c.xy[0])), a.xy[1].min(b.xy[1].min(c.xy[1]))];
-    let xy_max = [a.xy[0].max(b.xy[0].max(c.xy[0])), a.xy[1].max(b.xy[1].max(c.xy[1]))];
+    let xy_min = [
+        a.xy[0].min(b.xy[0].min(c.xy[0])),
+        a.xy[1].min(b.xy[1].min(c.xy[1])),
+    ];
+    let xy_max = [
+        a.xy[0].max(b.xy[0].max(c.xy[0])),
+        a.xy[1].max(b.xy[1].max(c.xy[1])),
+    ];
 
     // z-order range for the current triangle bbox;
     let min_z = z_order(xy_min, min_x, min_y, inv_size);
@@ -814,7 +829,11 @@ fn find_hole_bridge(nodes: &[Node], hole: &Node, outer_node_i: usize) -> Option<
                 + (hole.xy[1] - p.xy[1]) * (p_next.xy[0] - p.xy[0]) / (p_next.xy[1] - p.xy[1]);
             if x <= hole.xy[0] && x > qx {
                 qx = x;
-                m_i = Some(if p.xy[0] < p_next.xy[0] { p_i } else { p.next_i });
+                m_i = Some(if p.xy[0] < p_next.xy[0] {
+                    p_i
+                } else {
+                    p.next_i
+                });
                 if x == hole.xy[0] {
                     // hole touches outer segment; pick leftmost endpoint
                     return m_i;
