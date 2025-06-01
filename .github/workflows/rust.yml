@@ -32,8 +32,8 @@ jobs:
 
       - name: Generate coverage report
         run: |
-        cargo install cargo-tarpaulin
-        cargo tarpaulin --out Xml --all-targets
+          cargo install cargo-tarpaulin
+          cargo tarpaulin --out Xml --all-targets
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
