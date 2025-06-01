@@ -13,8 +13,9 @@ fn indices_2d() {
 
 #[test]
 fn indices_3d() {
-    let verts: Vec<f64> =
-        Vec::from([10.0, 0.0, 0.0, 0.0, 50.0, 0.0, 60.0, 60.0, 0.0, 70.0, 10.0, 0.0]);
+    let verts: Vec<f64> = Vec::from([
+        10.0, 0.0, 0.0, 0.0, 50.0, 0.0, 60.0, 60.0, 0.0, 70.0, 10.0, 0.0,
+    ]);
     let indices: Vec<usize> = earcut(&verts, &[], 3);
     assert_eq!(indices, vec![1, 0, 3, 3, 2, 1]);
 }
@@ -42,10 +43,10 @@ fn test_fixture(name: &str, num_triangles: usize, expected_deviation: f64) {
     type Coords = Vec<Vec<Vec<f64>>>;
     let s = fs::read_to_string("./fixtures/".to_string() + name + ".json").unwrap();
     let expected = serde_json::from_str::<Coords>(&s).unwrap();
-    let expected: Vec<Vec<&[f64]>> = expected.iter()
-        .map(|poly| {
-            poly.iter().map(Vec::as_slice).collect()
-        }).collect();
+    let expected: Vec<Vec<&[f64]>> = expected
+        .iter()
+        .map(|poly| poly.iter().map(Vec::as_slice).collect())
+        .collect();
 
     // prepare input
     let (vertices, hole_indices, dim) = flatten_float(&expected); // dim => dimensions

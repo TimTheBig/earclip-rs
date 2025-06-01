@@ -1,4 +1,4 @@
-use crate::{earclip, earclip_float, GetXYZ};
+use crate::{GetXYZ, earclip, earclip_float};
 
 extern crate alloc;
 use alloc::vec::Vec;
@@ -30,7 +30,11 @@ fn convert_2d_test() {
         }
     }
 
-    let polygon = vec![vec![P2D::new(0.0, 0.0), P2D::new(1.0, 0.0), P2D::new(0.0, 1.0)]];
+    let polygon = vec![vec![
+        P2D::new(0.0, 0.0),
+        P2D::new(1.0, 0.0),
+        P2D::new(0.0, 1.0),
+    ]];
     let (vertices, indices) = earclip(&polygon, None, None);
     assert_eq!(vertices, vec![0.0, 0.0, 1.0, 0.0, 0.0, 1.0]);
     assert_eq!(indices, vec![1, 2, 0]);
@@ -64,8 +68,11 @@ fn convert_3d_test() {
         }
     }
 
-    let polygon =
-        vec![vec![P3D::new(0.0, 0.0, 0.0), P3D::new(1.0, 0.0, 0.0), P3D::new(0.0, 1.0, 0.0)]];
+    let polygon = vec![vec![
+        P3D::new(0.0, 0.0, 0.0),
+        P3D::new(1.0, 0.0, 0.0),
+        P3D::new(0.0, 1.0, 0.0),
+    ]];
     let (vertices, indices) = earclip(&polygon, None, None);
     assert_eq!(vertices, vec![0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
     assert_eq!(indices, vec![1, 2, 0]);
@@ -81,7 +88,8 @@ fn empty() {
 
 #[test]
 fn simple() {
-    let polygon: Vec<Vec<&[f64]>> = vec![vec![&[0.0, 0.0, 0.0], &[1.0, 0.0, 0.0], &[0.0, 1.0, 0.0]]];
+    let polygon: Vec<Vec<&[f64]>> =
+        vec![vec![&[0.0, 0.0, 0.0], &[1.0, 0.0, 0.0], &[0.0, 1.0, 0.0]]];
     let (vertices, indices) = earclip_float(&polygon, None, None);
     assert_eq!(vertices, vec![0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
     assert_eq!(indices, vec![1, 2, 0]);

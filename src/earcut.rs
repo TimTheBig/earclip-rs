@@ -81,7 +81,8 @@ impl<'a> Store<'a> {
         queue: &'a mut Vec<(usize, f64)>,
     ) -> Self {
         let store = Self { data, nodes, queue };
-        store.nodes
+        store
+            .nodes
             .push(Node::new(0, [f64::INFINITY, f64::INFINITY])); // dummy node
 
         store
@@ -188,8 +189,7 @@ pub fn earcut_impl(
         outer_node_i,
         triangles_out,
         dim,
-        min_x,
-        min_y,
+        (min_x, min_y),
         inv_size,
         Pass::P0,
     );
@@ -295,8 +295,7 @@ fn earcut_linked(
     ear_i: usize,
     triangles: &mut Vec<usize>,
     dim: usize,
-    min_x: f64,
-    min_y: f64,
+    (min_x, min_y): (f64, f64),
     inv_size: f64,
     pass: Pass,
 ) {
@@ -347,12 +346,12 @@ fn earcut_linked(
             if pass == Pass::P0 {
                 // try filtering points and slicing again
                 ear_i = filter_points(nodes, ear_i, None);
-                earcut_linked(nodes, ear_i, triangles, dim, min_x, min_y, inv_size, Pass::P1);
+                earcut_linked(nodes, ear_i, triangles, dim, (min_x, min_y), inv_size, Pass::P1);
             } else if pass == Pass::P1 {
                 // if this didn't work, try curing all small self-intersections locally
                 let filtered = filter_points(nodes, ear_i, None);
                 ear_i = cure_local_intersections(nodes, filtered, triangles, dim);
-                earcut_linked(nodes, ear_i, triangles, dim, min_x, min_y, inv_size, Pass::P2);
+                earcut_linked(nodes, ear_i, triangles, dim, (min_x, min_y), inv_size, Pass::P2);
             } else if pass == Pass::P2 {
                 // as a last resort, try splitting the remaining polygon into two
                 split_earcut(nodes, ear_i, triangles, dim, min_x, min_y, inv_size);
@@ -574,8 +573,8 @@ fn split_earcut(
                 ci = filter_points(nodes, ci, end_i);
 
                 // run earcut on each half
-                earcut_linked(nodes, ai, triangles, dim, min_x, min_y, inv_size, Pass::P0);
-                earcut_linked(nodes, ci, triangles, dim, min_x, min_y, inv_size, Pass::P0);
+                earcut_linked(nodes, ai, triangles, dim, (min_x, min_y), inv_size, Pass::P0);
+                earcut_linked(nodes, ci, triangles, dim, (min_x, min_y), inv_size, Pass::P0);
                 return;
             }
             bi = b.next_i;
@@ -863,9 +862,15 @@ fn find_hole_bridge(nodes: &[Node], hole: &Node, outer_node_i: usize) -> Option<
     loop {
         if (((hole.xy[0] >= p.xy[0]) & (p.xy[0] >= mxmy[0])) && hole.xy[0] != p.xy[0])
             && point_in_triangle(
-                [if hole.xy[1] < mxmy[1] { hole.xy[0] } else { qx }, hole.xy[1]],
+                [
+                    if hole.xy[1] < mxmy[1] { hole.xy[0] } else { qx },
+                    hole.xy[1],
+                ],
                 mxmy,
-                [if hole.xy[1] < mxmy[1] { qx } else { hole.xy[0] }, hole.xy[1]],
+                [
+                    if hole.xy[1] < mxmy[1] { qx } else { hole.xy[0] },
+                    hole.xy[1],
+                ],
                 p.xy,
             )
         {
