@@ -84,7 +84,10 @@ jobs:
           fi
           typos
 
-      - name: rust-audit-check
+      - name: Create Cargo.lock to Audit
+        run: cargo update
+
+      - name: Audit Check
         uses: rustsec/audit-check@v2
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
