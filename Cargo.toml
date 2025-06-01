@@ -1,0 +1,43 @@
+[package]
+name = "earclip-2"
+version = "2.0.0"
+edition = "2024"
+authors = ["Craig O'Connor <oconnorct1@gmail.com>"]
+description = "Triangle mesher designed to be fast, efficient, and sphere capable."
+documentation = "https://docs.rs/earclip"
+homepage = "https://github.com/OpenS2/earclip"
+repository = "https://github.com/OpenS2/earclip"
+readme = "README.md"
+categories = ["no-std", "algorithms"]
+keywords = ["earclip", "earcut", "gis", "low-cost-code", "triangulation"]
+license = "MIT"
+# Include only specific files and directories
+# include = ["/ovtile", "Cargo.toml", "Cargo.lock", "README.md", "LICENSE"]
+exclude = [
+    "/assets",
+    "/benchmarks",
+    "/coverage",
+    "/docs",
+    "/tests",
+    "/tools",
+    "/src",
+    ".github"
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+libm = "0.2"
+geo-3d-types = { version = "*", git = "https://github.com/TimTheBig/geo-3d.git", optional = true, package = "geo-3d-types" }
+
+[dev-dependencies]
+serde_json = { version = "1.0", features = ["float_roundtrip"] }
+serde = { version = "1.0", features = ["derive"] }
+criterion = "0.5"
+
+[[bench]]
+name = "benchmark"
+harness = false
+
+[profile.bench]
+opt-level = 3
