@@ -1,4 +1,4 @@
-/// Trait to extract the x, y and z values
+/// Trait to extract the x, y and z values of a coordinate
 pub trait GetXYZ {
     /// Returns the x value
     fn x(&self) -> f64;
