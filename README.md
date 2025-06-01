@@ -1,5 +1,5 @@
 <h1 style="text-align: center;">
-    <div align="center">earclip-2</div>
+    <div align="center">earclip-rs</div>
 </h1>
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/TimTheBig/earclip-2/rust.yml?logo=github)
@@ -10,6 +10,8 @@
 ## About
 
 A fast and small 3D/2D polygon triangulation library with builtin tesselation.
+
+A simplified fork of [OpenS2/earclip](https://github.com/OpenS2/earclip).
 
 ## Install
 

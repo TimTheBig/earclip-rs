@@ -1,6 +1,5 @@
 use alloc::vec::Vec;
 use core::{borrow::BorrowMut, cmp::Ordering, f64, ptr};
-use libm::fabs;
 
 macro_rules! node {
     ($self:ident.$nodes:ident, $index:expr) => {{
@@ -568,7 +567,7 @@ fn split_earcut(
                 // split the polygon in two by the diagonal
                 let mut ci = split_polygon(nodes, ai, bi);
 
-                // filter colinear points around the cuts
+                // filter collinear points around the cuts
                 let end_i = Some(node!(nodes, ai).next_i);
                 ai = filter_points(nodes, ai, end_i);
                 let end_i = Some(node!(nodes, ci).next_i);
@@ -870,7 +869,7 @@ fn find_hole_bridge(nodes: &[Node], hole: &Node, outer_node_i: usize) -> Option<
                 p.xy,
             )
         {
-            let tan = fabs(hole.xy[1] - p.xy[1]) / (hole.xy[0] - p.xy[0]);
+            let tan = (hole.xy[1] - p.xy[1]).abs() / (hole.xy[0] - p.xy[0]);
             if locally_inside(nodes, p, hole)
                 && (tan < tan_min
                     || (tan == tan_min
@@ -896,7 +895,7 @@ fn sector_contains_sector(nodes: &[Node], m: &Node, p: &Node) -> bool {
         && area(node!(nodes, p.next_i), m, node!(nodes, m.next_i)) < 0.
 }
 
-/// eliminate colinear or duplicate points
+/// eliminate collinear or duplicate points
 fn filter_points(nodes: &mut [Node], start_i: usize, end_i: Option<usize>) -> usize {
     let mut end_i = end_i.unwrap_or(start_i);
 

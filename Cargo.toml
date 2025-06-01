@@ -1,12 +1,11 @@
 [package]
-name = "earclip-2"
+name = "earclip-rs"
 version = "2.0.0"
 edition = "2024"
-authors = ["Craig O'Connor <oconnorct1@gmail.com>"]
-description = "Triangle mesher designed to be fast, efficient, and sphere capable."
-documentation = "https://docs.rs/earclip"
-homepage = "https://github.com/OpenS2/earclip"
-repository = "https://github.com/OpenS2/earclip"
+authors = ["TimTheBig"] # originally by: Craig O'Connor
+description = "A 3D/2D polygon triangulation algorithm designed to be fast, efficient, and sphere capable."
+documentation = "https://docs.rs/earclip-rs"
+repository = "https://github.com/TimTheBig/earclip"
 readme = "README.md"
 categories = ["no-std", "algorithms"]
 keywords = ["earclip", "earcut", "gis", "low-cost-code", "triangulation"]
@@ -27,8 +26,7 @@ exclude = [
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-libm = "0.2"
-geo-3d-types = { version = "*", git = "https://github.com/TimTheBig/geo-3d.git", optional = true, package = "geo-3d-types" }
+geo-3d-types = { version = "0.*", git = "https://github.com/TimTheBig/geo-3d.git", optional = true, package = "geo-3d-types" }
 
 [dev-dependencies]
 serde_json = { version = "1.0", features = ["float_roundtrip"] }

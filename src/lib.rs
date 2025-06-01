@@ -3,29 +3,31 @@
 //!
 //! Basic usage:
 //! ```rust
-//! use earclip_2::earclip_float;
+//! use earclip_rs::earclip_float;
 //!
 //! let polygon: &[Vec<&[f64]>] = &[vec![&[0.0, 0.0, 0.0], &[1.0, 0.0, 0.0], &[0.0, 1.0, 0.0]]];
 //! let (vertices, indices) = earclip_float(polygon, None, None);
 //! assert_eq!(vertices, vec![0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0]);
 //! assert_eq!(indices, vec![1, 2, 0]);
 //! ```
-#![no_std]
+#![cfg_attr(not(test), no_std)]
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
 extern crate alloc;
 
+use alloc::vec::Vec;
+
 /// The `earcut` module
 pub mod earcut;
-
-use alloc::vec::Vec;
-use core::f64;
 pub use earcut::{earcut, signed_area};
-use libm::fabs;
-mod types;
-use types::GetXYZ;
+
+mod traits;
+pub use traits::GetXYZ;
+
+#[cfg(test)]
+mod tests;
 
 /// An earcut polygon generator with tessellation support
 pub fn earclip<T: GetXYZ>(
@@ -64,7 +66,7 @@ pub fn earclip_float(
 
     // Use earcut to build standard triangle set
     let (mut vertices, hole_indices, dim) = flatten_float(polygon); // dim => dimensions
-    let mut indices = earcut(&vertices, &hole_indices, dim);
+    let mut indices: Vec<usize> = earcut(&vertices, &hole_indices, dim);
 
     // tessellate if necessary
     if modulo != f64::INFINITY {
@@ -360,7 +362,7 @@ pub fn flatten<T: GetXYZ>(data: &[Vec<T>]) -> (Vec<f64>, Vec<usize>, usize) {
     (vertices, hole_indices, dim)
 }
 
-/// Flattens a 2D or 3D array whether its a flat point ([x, y, z]) or object ({ x, y, z })
+/// Flattens a 2D or 3D array, a flat point ([x, y, z])
 pub fn flatten_float(data: &[Vec<&[f64]>]) -> (Vec<f64>, Vec<usize>, usize) {
     let mut vertices = Vec::new();
     let mut hole_indices = Vec::new();
@@ -413,7 +415,7 @@ pub fn deviation(data: &[f64], hole_indices: &[usize], triangles: &[usize], dim:
     } else {
         data.len()
     };
-    let mut polygon_area = fabs(signed_area(data, 0, outer_len, dim));
+    let mut polygon_area = signed_area(data, 0, outer_len, dim).abs();
 
     if has_holes {
         for i in 0..hole_indices.len() {
@@ -423,7 +425,7 @@ pub fn deviation(data: &[f64], hole_indices: &[usize], triangles: &[usize], dim:
             } else {
                 data.len()
             };
-            polygon_area -= fabs(signed_area(data, start, end, dim));
+            polygon_area -= signed_area(data, start, end, dim).abs();
         }
     }
 
@@ -433,10 +435,10 @@ pub fn deviation(data: &[f64], hole_indices: &[usize], triangles: &[usize], dim:
         let a = triangles[i] * dim;
         let b = triangles[i + 1] * dim;
         let c = triangles[i + 2] * dim;
-        triangles_area += fabs(
+        triangles_area += (
             (data[a] - data[c]) * (data[b + 1] - data[a + 1])
-                - (data[a] - data[b]) * (data[c + 1] - data[a + 1]),
-        );
+                - (data[a] - data[b]) * (data[c + 1] - data[a + 1])
+        ).abs();
         i += 3;
     }
 
@@ -444,6 +446,6 @@ pub fn deviation(data: &[f64], hole_indices: &[usize], triangles: &[usize], dim:
     if polygon_area == zero && triangles_area == zero {
         zero
     } else {
-        fabs((triangles_area - polygon_area) / polygon_area)
+        ((triangles_area - polygon_area) / polygon_area).abs()
     }
 }
